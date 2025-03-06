@@ -61,15 +61,15 @@ std::string handle_digraph::get_a_viable_child_node_name(const generic_heirarchy
 		return get_node_graph_name(node);
 	}
 
-	node.foreach_child([this](const generic_heirarchy& child) {
-		std::string child_graph_node_name = get_a_viable_child_node_name(child);
-		if (!child_graph_node_name.empty())
+	std::string child_graph_node_name;
+	node.foreach_child([&child_graph_node_name,this](const generic_heirarchy& child) {
+		if (child_graph_node_name.empty())
 		{
-			return child_graph_node_name;
+			child_graph_node_name = get_a_viable_child_node_name(child);
 		}
 	});
 
-	return "";
+	return child_graph_node_name;
 }
 
 std::string handle_digraph::dump_node_names() const
