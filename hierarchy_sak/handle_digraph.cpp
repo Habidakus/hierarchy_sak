@@ -82,9 +82,14 @@ std::string handle_digraph::dump_node_names() const
 		if (entry.first->has_name())
 		{
 			ss << "  " << entry.second << " [label=\"";
-			const char* entry_name = entry.first->get_name();
+			std::string entry_name = std::string(entry.first->get_name());
+			if (entry_name.find('\n') != std::string::npos)
+			{
+				// # TODO: FIX THIS
+				entry_name = "MULTIPLE LINES";
+			};
 			ss << entry_name;
-			if (std::string(entry_name).back() == '\\')
+			if (!entry_name.empty() && entry_name.back() == '\\')
 			{
 				ss << " ";
 			}
@@ -115,9 +120,15 @@ std::string handle_digraph::convert_node_name_to_graph_node(const generic_heirar
 {
 	if (node.has_name())
 	{
+		std::string node_name(node.get_name());
+		if (node_name.empty())
+		{
+			return "empty";
+		}
+
 		bool first = true;
 		std::ostringstream ss;
-		for (char c : std::string(node.get_name()))
+		for (char c : node_name)
 		{
 			if (isalnum(c))
 			{
@@ -135,8 +146,12 @@ std::string handle_digraph::convert_node_name_to_graph_node(const generic_heirar
 					first = false;
 				}
 			}
-			else if (isspace(c))
+			else if (isspace(c) || c == '_')
 			{
+				if (first)
+				{
+					ss << "space";
+				}
 				ss << '_';
 
 				first = false;

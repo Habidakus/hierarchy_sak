@@ -69,6 +69,30 @@ generic_heirarchy* handle_json::create_heirarchy(const char* name, const rapidjs
 		{
 			ss << value->GetDouble();
 		}
+		else if (value->IsFalse())
+		{
+			ss << "false";
+		}
+		else if (value->IsTrue())
+		{
+			ss << "true";
+		}
+		else if (value->IsUint())
+		{
+			ss << value->GetUint();
+		}
+		else if (value->IsInt64())
+		{
+			ss << value->GetInt64();
+		}
+		else if (value->IsUint64())
+		{
+			ss << value->GetUint64();
+		}
+		else if (value->IsNull())
+		{
+			ss << "null";
+		}
 		else
 		{
 			ss << "???";

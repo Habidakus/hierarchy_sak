@@ -29,6 +29,7 @@ int main(int argc, char** argv)
 		else
 		{
 			std::cerr << "Failed to read " << argv[1] << std::endl;
+			return -1;
 		}
 	}
 	else
