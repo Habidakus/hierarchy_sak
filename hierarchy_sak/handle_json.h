@@ -19,13 +19,13 @@ private:
 	void populate_children(generic_heirarchy* root, rapidjson::Value::ConstMemberIterator begin, rapidjson::Value::ConstMemberIterator end);
 	void populate_children(generic_heirarchy* root, rapidjson::Value::ConstValueIterator begin, rapidjson::Value::ConstValueIterator end);
 
-	void consume_into_object(rapidjson::Value& object, const std::vector<generic_heirarchy>& children, rapidjson::Document& doc);
-	void consume_into_array(rapidjson::Value& array, const std::vector<generic_heirarchy>& children, rapidjson::Document& doc);
+	void consume_children_into_object(rapidjson::Value& object, const generic_heirarchy& parent, rapidjson::Document& doc);
+	void consume_children_into_array(rapidjson::Value& array, const generic_heirarchy& parent, rapidjson::Document& doc);
 
-	bool are_any_children_parents(const std::vector<generic_heirarchy>& children);
-	bool are_all_children_named(const std::vector<generic_heirarchy>& children);
-	bool are_no_children_named(const std::vector<generic_heirarchy>& children);
+	bool are_any_children_parents(const generic_heirarchy& parent);
+	bool are_all_children_named(const generic_heirarchy& parent);
+	bool are_no_children_named(const generic_heirarchy& parent);
 
-	rapidjson::Value consume_into_attribute_value(const std::vector<generic_heirarchy>& children, rapidjson::Document& doc);
+	rapidjson::Value consume_children_into_attribute_value(const generic_heirarchy& parent, rapidjson::Document& doc);
 	rapidjson::Value consume_into_attribute_value(const generic_heirarchy& node, rapidjson::Document& doc);
 };

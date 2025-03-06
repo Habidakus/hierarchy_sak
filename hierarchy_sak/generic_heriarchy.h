@@ -3,14 +3,12 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <functional>
 
 class generic_heirarchy
 {
 private:
 	std::optional<std::string> m_value;
-
-public:
-	// TODO : make private
 	std::vector<generic_heirarchy> m_children;
 
 public:
@@ -18,6 +16,11 @@ public:
 	generic_heirarchy(const char* value) : m_value(value) {}
 	generic_heirarchy() {}
 
+	void AddChild(generic_heirarchy* node);
+	void foreach_child(std::function<void(const generic_heirarchy&)> func) const;
+	inline bool has_children() const { return !m_children.empty(); }
+	inline bool has_single_child() const { return m_children.size() == 1; }
+	inline const generic_heirarchy& get_only_child() const { return m_children[0]; }
 
 	//~generic_heirarchy() {
 	//	for (auto& child : m_children)

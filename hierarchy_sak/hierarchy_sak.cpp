@@ -43,14 +43,10 @@ int main(int argc, char** argv)
 	//handle_text text_handler;
 	//std::cout << text_handler.consume_heirarchy(*h) << std::endl;
 	
-	handle_digraph digraph_handler;
-	std::cout << digraph_handler.consume_heirarchy(*h) << std::endl;
+	//handle_digraph digraph_handler;
+	//std::cout << digraph_handler.consume_heirarchy(*h) << std::endl;
 
-	//std::ostringstream ss;
-	//h->dump(ss);
-	//std::cout << ss.str() << std::endl;
-
-	//std::cout << json_handler.consume_heirarchy(*h) << std::endl;
+	std::cout << json_handler.consume_heirarchy(*h) << std::endl;
 
 	delete h;
 }

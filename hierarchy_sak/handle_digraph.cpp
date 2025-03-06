@@ -26,8 +26,7 @@ std::string handle_digraph::generate_edges(const generic_heirarchy& node)
 
 	if (node.has_name())
 	{
-		for (const generic_heirarchy& child : node.m_children)
-		{
+		node.foreach_child([&ss, graph_node_name, this](const generic_heirarchy& child) {
 			std::string child_graph_node_name = get_node_graph_name(child);
 			if (child.has_name())
 			{
@@ -40,13 +39,12 @@ std::string handle_digraph::generate_edges(const generic_heirarchy& node)
 				ss << " [lhead=\"cluster_" << child_graph_node_name << "\"]";
 			}
 			ss << ";\n";
-		}
+		});
 	}
 
-	for (const generic_heirarchy& child : node.m_children)
-	{
+	node.foreach_child([&ss, this](const generic_heirarchy& child) {
 		ss << generate_edges(child);
-	}
+	});
 
 	if (!node.has_name())
 	{
@@ -62,14 +60,14 @@ std::string handle_digraph::get_a_viable_child_node_name(const generic_heirarchy
 	{
 		return get_node_graph_name(node);
 	}
-	for (const generic_heirarchy& child : node.m_children)
-	{
+
+	node.foreach_child([this](const generic_heirarchy& child) {
 		std::string child_graph_node_name = get_a_viable_child_node_name(child);
 		if (!child_graph_node_name.empty())
 		{
 			return child_graph_node_name;
 		}
-	}
+	});
 
 	return "";
 }
