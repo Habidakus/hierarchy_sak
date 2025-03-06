@@ -18,12 +18,24 @@
     <ClCompile Include="hierarchy_sak.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="handle_text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="handle_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hierarchy_sak.h">
+    <ClInclude Include="generic_heriarchy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handle_text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handle_json.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
