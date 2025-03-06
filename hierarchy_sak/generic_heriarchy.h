@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <memory>
 
 class generic_heirarchy
 {
 private:
 	std::optional<std::string> m_value;
-	std::vector<generic_heirarchy> m_children;
+	std::vector<std::shared_ptr<generic_heirarchy>> m_children;
 
 public:
 	generic_heirarchy(std::string_view str) : m_value(str) {}
@@ -20,7 +21,7 @@ public:
 	void foreach_child(std::function<void(const generic_heirarchy&)> func) const;
 	inline bool has_children() const { return !m_children.empty(); }
 	inline bool has_single_child() const { return m_children.size() == 1; }
-	inline const generic_heirarchy& get_only_child() const { return m_children[0]; }
+	const generic_heirarchy& get_only_child() const;
 
 	//~generic_heirarchy() {
 	//	for (auto& child : m_children)
