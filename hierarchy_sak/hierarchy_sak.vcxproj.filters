@@ -24,6 +24,9 @@
     <ClCompile Include="handle_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="handle_digraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="handle_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handle_digraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

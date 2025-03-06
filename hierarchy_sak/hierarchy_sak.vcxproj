@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="handle_digraph.cpp" />
     <ClCompile Include="handle_json.cpp" />
     <ClCompile Include="handle_text.cpp" />
     <ClCompile Include="hierarchy_sak.cpp" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="generic_heriarchy.h" />
+    <ClInclude Include="handle_digraph.h" />
     <ClInclude Include="handle_json.h" />
     <ClInclude Include="handle_text.h" />
   </ItemGroup>

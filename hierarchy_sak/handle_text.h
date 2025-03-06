@@ -5,7 +5,6 @@
 class handle_text : IConsumeHeirarchy
 {
 public:
-	// Inherited via IConsumeHeirarchy
 	std::string consume_heirarchy(const generic_heirarchy& heirarchy) override
 	{
 		return consume_heirarchy_internal(0, heirarchy);
