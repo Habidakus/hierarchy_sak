@@ -195,38 +195,41 @@ void handle_json::consume_children_into_array(rapidjson::Value& array, const gen
 
 bool handle_json::are_any_children_parents(const generic_heirarchy& parent)
 {
-	parent.foreach_child([](const generic_heirarchy& child) {
-		if (child.has_children())
+	bool ret_val = false;
+	parent.foreach_child([&ret_val](const generic_heirarchy& child) {
+		if (!ret_val)
 		{
-			return true;
+			ret_val = child.has_children();
 		}
 	});
 
-	return false;
+	return ret_val;
 }
 
 bool handle_json::are_all_children_named(const generic_heirarchy& parent)
 {
-	parent.foreach_child([](const generic_heirarchy& child) {
-		if (!child.has_name())
+	bool ret_val = true;
+	parent.foreach_child([&ret_val](const generic_heirarchy& child) {
+		if (ret_val)
 		{
-			return false;
+			ret_val = child.has_name();
 		}
 	});
 
-	return true;
+	return ret_val;
 }
 
 bool handle_json::are_no_children_named(const generic_heirarchy& parent)
 {
-	parent.foreach_child([](const generic_heirarchy& child) {
-		if (child.has_name())
+	bool ret_val = true;
+	parent.foreach_child([&ret_val](const generic_heirarchy& child) {
+		if (ret_val)
 		{
-			return false;
+			ret_val = !child.has_name();
 		}
 	});
 
-	return true;
+	return ret_val;
 }
 
 rapidjson::Value handle_json::consume_children_into_attribute_value(const generic_heirarchy& parent, rapidjson::Document& doc)
@@ -234,7 +237,8 @@ rapidjson::Value handle_json::consume_children_into_attribute_value(const generi
 	rapidjson::Value value;
 	if (!parent.has_children())
 	{
-		value.SetNull();
+		//value.SetNull();
+		value.SetObject();
 		return value;
 	}
 
@@ -275,7 +279,43 @@ rapidjson::Value handle_json::consume_into_attribute_value(const generic_heirarc
 	rapidjson::Value value;
 	if (!node.has_children())
 	{
-		value.SetString(node.get_name(), doc.GetAllocator());
+		std::string name_as_text(node.get_name());
+
+		if (name_as_text == "true")
+		{
+			value.SetBool(true);
+			return value;
+		}
+		if (name_as_text == "false")
+		{
+			value.SetBool(false);
+			return value;
+		}
+
+		char* end;
+
+		uint64_t name_as_uint64 = std::strtoul(name_as_text.c_str(), &end, 10);
+		if (end != name_as_text.c_str() && *end == '\0')
+		{
+			value.SetUint64(name_as_uint64);
+			return value;
+		}
+
+		int64_t name_as_int64 = std::strtol(name_as_text.c_str(), &end, 10);
+		if (end != name_as_text.c_str() && *end == '\0')
+		{
+			value.SetInt64(name_as_int64);
+			return value;
+		}
+
+		double name_as_double = std::strtod(name_as_text.c_str(), &end);
+		if (end != name_as_text.c_str() && *end == '\0')
+		{
+			value.SetDouble(name_as_double);
+			return value;
+		}
+
+		value.SetString(name_as_text.c_str(), doc.GetAllocator());
 		return value;
 	}
 
