@@ -26,7 +26,7 @@ std::string handle_digraph::generate_edges(const generic_hierarchy& node)
 
 	if (node.has_name())
 	{
-		node.foreach_child([&ss, graph_node_name, this](const generic_hierarchy& child) {
+		node.foreach_child([&](const generic_hierarchy& child) {
 			std::string child_graph_node_name = get_node_graph_name(child);
 			if (child.has_name())
 			{
@@ -42,7 +42,7 @@ std::string handle_digraph::generate_edges(const generic_hierarchy& node)
 		});
 	}
 
-	node.foreach_child([&ss, this](const generic_hierarchy& child) {
+	node.foreach_child([&](const generic_hierarchy& child) {
 		ss << generate_edges(child);
 	});
 
@@ -62,7 +62,7 @@ std::string handle_digraph::get_a_viable_child_node_name(const generic_hierarchy
 	}
 
 	std::string child_graph_node_name;
-	node.foreach_child([&child_graph_node_name,this](const generic_hierarchy& child) {
+	node.foreach_child([&](const generic_hierarchy& child) {
 		if (child_graph_node_name.empty())
 		{
 			child_graph_node_name = get_a_viable_child_node_name(child);

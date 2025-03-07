@@ -174,7 +174,7 @@ void handle_json::populate_children(generic_hierarchy* root, rapidjson::Value::C
 
 void handle_json::consume_children_into_object(rapidjson::Value& object, const generic_hierarchy& parent, rapidjson::Document& doc)
 {
-	parent.foreach_child([&object, &doc, this](const generic_hierarchy& member_value_pair) {
+	parent.foreach_child([&](const generic_hierarchy& member_value_pair) {
 		assert(member_value_pair.has_name() || member_value_pair.has_children());
 		const char* name = member_value_pair.get_name();
 		rapidjson::Value value = consume_children_into_attribute_value(member_value_pair, doc);
@@ -185,7 +185,7 @@ void handle_json::consume_children_into_object(rapidjson::Value& object, const g
 
 void handle_json::consume_children_into_array(rapidjson::Value& array, const generic_hierarchy& parent, rapidjson::Document& doc)
 {
-	parent.foreach_child([&array, &doc, this](const generic_hierarchy& child) {
+	parent.foreach_child([&](const generic_hierarchy& child) {
 		rapidjson::Value value = consume_into_attribute_value(child, doc);
 		array.PushBack(value, doc.GetAllocator());
 	});
