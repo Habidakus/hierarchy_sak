@@ -1,5 +1,4 @@
-
-#include "generic_heriarchy.h"
+#include "generic_hierarchy.h"
 #include "handle_json.h"
 #include "handle_text.h"
 #include "handle_digraph.h"
@@ -38,15 +37,15 @@ int main(int argc, char** argv)
 	}
 	
 	handle_json json_handler;
-	generic_heirarchy* h = json_handler.produce_heirarchy(json_text);
+	generic_hierarchy* h = json_handler.parse_hierarchy(json_text);
 	
 	//handle_text text_handler;
-	//std::cout << text_handler.consume_heirarchy(*h) << std::endl;
+	//std::cout << text_handler.consume_hierarchy(*h) << std::endl;
 	
 	//handle_digraph digraph_handler;
-	//std::cout << digraph_handler.consume_heirarchy(*h) << std::endl;
+	//std::cout << digraph_handler.consume_hierarchy(*h) << std::endl;
 
-	std::cout << json_handler.consume_heirarchy(*h) << std::endl;
+	std::cout << json_handler.consume_hierarchy(*h) << std::endl;
 
 	delete h;
 }

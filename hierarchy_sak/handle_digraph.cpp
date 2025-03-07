@@ -2,19 +2,19 @@
 
 #include <sstream>
 
-std::string handle_digraph::consume_heirarchy(const generic_heirarchy& heirarchy)
+std::string handle_digraph::consume_hierarchy(const generic_hierarchy& hierarchy)
 {
 	std::ostringstream ss;
 	ss << "digraph G {\n";
 	ss << "  layout=dot;\n";
 	ss << "  compound=true;\n";
-	ss << generate_edges(heirarchy);
+	ss << generate_edges(hierarchy);
 	ss << dump_node_names();
 	ss << "}\n";
 	return ss.str();
 }
 
-std::string handle_digraph::generate_edges(const generic_heirarchy& node)
+std::string handle_digraph::generate_edges(const generic_hierarchy& node)
 {
 	std::ostringstream ss;
 	std::string graph_node_name = get_node_graph_name(node);
@@ -26,7 +26,7 @@ std::string handle_digraph::generate_edges(const generic_heirarchy& node)
 
 	if (node.has_name())
 	{
-		node.foreach_child([&ss, graph_node_name, this](const generic_heirarchy& child) {
+		node.foreach_child([&ss, graph_node_name, this](const generic_hierarchy& child) {
 			std::string child_graph_node_name = get_node_graph_name(child);
 			if (child.has_name())
 			{
@@ -42,7 +42,7 @@ std::string handle_digraph::generate_edges(const generic_heirarchy& node)
 		});
 	}
 
-	node.foreach_child([&ss, this](const generic_heirarchy& child) {
+	node.foreach_child([&ss, this](const generic_hierarchy& child) {
 		ss << generate_edges(child);
 	});
 
@@ -54,7 +54,7 @@ std::string handle_digraph::generate_edges(const generic_heirarchy& node)
 	return ss.str();
 }
 
-std::string handle_digraph::get_a_viable_child_node_name(const generic_heirarchy& node)
+std::string handle_digraph::get_a_viable_child_node_name(const generic_hierarchy& node)
 {
 	if (node.has_name())
 	{
@@ -62,7 +62,7 @@ std::string handle_digraph::get_a_viable_child_node_name(const generic_heirarchy
 	}
 
 	std::string child_graph_node_name;
-	node.foreach_child([&child_graph_node_name,this](const generic_heirarchy& child) {
+	node.foreach_child([&child_graph_node_name,this](const generic_hierarchy& child) {
 		if (child_graph_node_name.empty())
 		{
 			child_graph_node_name = get_a_viable_child_node_name(child);
@@ -103,7 +103,7 @@ std::string handle_digraph::dump_node_names() const
 	return ss.str();
 }
 
-std::string handle_digraph::get_node_graph_name(const generic_heirarchy& node)
+std::string handle_digraph::get_node_graph_name(const generic_hierarchy& node)
 {
 	if (m_node_names.find(&node) == m_node_names.end())
 	{
@@ -114,7 +114,7 @@ std::string handle_digraph::get_node_graph_name(const generic_heirarchy& node)
 	return m_node_names[&node];
 }
 
-std::string handle_digraph::convert_node_name_to_graph_node(const generic_heirarchy& node) const
+std::string handle_digraph::convert_node_name_to_graph_node(const generic_hierarchy& node) const
 {
 	if (node.has_name())
 	{

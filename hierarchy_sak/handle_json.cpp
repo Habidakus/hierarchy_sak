@@ -1,5 +1,3 @@
-#define _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING
-
 #include "handle_json.h"
 
 #include <rapidjson/stringbuffer.h>
@@ -7,16 +5,16 @@
 #include <sstream>
 #include <cassert>
 
-generic_heirarchy* handle_json::produce_heirarchy(std::string_view json_text)
+generic_hierarchy* handle_json::parse_hierarchy(std::string_view json_text)
 {
-	generic_heirarchy* root = new generic_heirarchy();
+	generic_hierarchy* root = new generic_hierarchy();
 	rapidjson::Document doc;
 	doc.Parse(json_text.data());
 	populate_children(root, doc.GetObject().begin(), doc.GetObject().end());
 	return root;
 }
 
-std::string handle_json::consume_heirarchy(const generic_heirarchy& root)
+std::string handle_json::consume_hierarchy(const generic_hierarchy& root)
 {
 	rapidjson::Document doc;
 	consume_children_into_object(doc.SetObject(), root, doc);
@@ -26,23 +24,23 @@ std::string handle_json::consume_heirarchy(const generic_heirarchy& root)
 	return buffer.GetString();
 }
 
-generic_heirarchy* handle_json::create_heirarchy(const char* name, rapidjson::Value::ConstMemberIterator begin, rapidjson::Value::ConstMemberIterator end)
+generic_hierarchy* handle_json::create_hierarchy(const char* name, rapidjson::Value::ConstMemberIterator begin, rapidjson::Value::ConstMemberIterator end)
 {
-	generic_heirarchy* root = new generic_heirarchy(name);
+	generic_hierarchy* root = new generic_hierarchy(name);
 	populate_children(root, begin, end);
 	return root;
 }
 
-generic_heirarchy* handle_json::create_heirarchy(const char* name, rapidjson::Value::ConstValueIterator begin, rapidjson::Value::ConstValueIterator end)
+generic_hierarchy* handle_json::create_hierarchy(const char* name, rapidjson::Value::ConstValueIterator begin, rapidjson::Value::ConstValueIterator end)
 {
-	generic_heirarchy* root = new generic_heirarchy(name);
+	generic_hierarchy* root = new generic_hierarchy(name);
 	populate_children(root, begin, end);
 	return root;
 }
 
-generic_heirarchy* handle_json::create_heirarchy(const char* name, const rapidjson::Value* value)
+generic_hierarchy* handle_json::create_hierarchy(const char* name, const rapidjson::Value* value)
 {
-	generic_heirarchy* root = new generic_heirarchy(name);
+	generic_hierarchy* root = new generic_hierarchy(name);
 	if (value->IsObject())
 	{
 		populate_children(root, value->MemberBegin(), value->MemberEnd());
@@ -53,7 +51,7 @@ generic_heirarchy* handle_json::create_heirarchy(const char* name, const rapidjs
 	}
 	else if (value->IsString())
 	{
-		root->AddChild(new generic_heirarchy(value->GetString()));
+		root->AddChild(new generic_hierarchy(value->GetString()));
 	}
 	else
 	{
@@ -99,47 +97,47 @@ generic_heirarchy* handle_json::create_heirarchy(const char* name, const rapidjs
 			ss << "???";
 		}
 
-		root->AddChild(new generic_heirarchy(ss.str()));
+		root->AddChild(new generic_hierarchy(ss.str()));
 	}
 
 	return root;
 }
 
-void handle_json::populate_children(generic_heirarchy* root, rapidjson::Value::ConstMemberIterator begin, rapidjson::Value::ConstMemberIterator end)
+void handle_json::populate_children(generic_hierarchy* root, rapidjson::Value::ConstMemberIterator begin, rapidjson::Value::ConstMemberIterator end)
 {
 	for (auto iter = begin; iter != end; ++iter)
 	{
 		const char* iter_name = iter->name.GetString();
 		if (iter->value.IsObject())
 		{
-			generic_heirarchy* node = create_heirarchy(iter_name, iter->value.MemberBegin(), iter->value.MemberEnd());
+			generic_hierarchy* node = create_hierarchy(iter_name, iter->value.MemberBegin(), iter->value.MemberEnd());
 			root->AddChild(node);
 		}
 		else if (iter->value.IsArray())
 		{
-			generic_heirarchy* node = new generic_heirarchy(iter_name);
+			generic_hierarchy* node = new generic_hierarchy(iter_name);
 			populate_children(node, iter->value.Begin(), iter->value.End());
 			root->AddChild(node);
 		}
 		else
 		{
 			const rapidjson::Value* value = &iter->value;
-			generic_heirarchy* node = create_heirarchy(iter_name, value);
+			generic_hierarchy* node = create_hierarchy(iter_name, value);
 			root->AddChild(node);
 		}
 	}
 }
 
-void handle_json::populate_children(generic_heirarchy* root, rapidjson::Value::ConstValueIterator begin, rapidjson::Value::ConstValueIterator end)
+void handle_json::populate_children(generic_hierarchy* root, rapidjson::Value::ConstValueIterator begin, rapidjson::Value::ConstValueIterator end)
 {
 	for (auto iter = begin; iter != end; ++iter)
 	{
 		if (iter->IsObject())
 		{
-			generic_heirarchy* node = new generic_heirarchy();
+			generic_hierarchy* node = new generic_hierarchy();
 			for (auto& member : iter->GetObject())
 			{
-				node->AddChild(create_heirarchy(member.name.GetString(), &member.value));
+				node->AddChild(create_hierarchy(member.name.GetString(), &member.value));
 			}
 
 			root->AddChild(node);
@@ -150,33 +148,33 @@ void handle_json::populate_children(generic_heirarchy* root, rapidjson::Value::C
 			{
 				if (el->IsObject())
 				{
-					generic_heirarchy* node = new generic_heirarchy();
+					generic_hierarchy* node = new generic_hierarchy();
 					populate_children(node, iter->GetObject().MemberBegin(), iter->GetObject().MemberEnd());
 					root->AddChild(node);
 				}
 				else
 				{
-					generic_heirarchy* node = new generic_heirarchy(iter->GetObject().MemberBegin()->name.GetString());
+					generic_hierarchy* node = new generic_hierarchy(iter->GetObject().MemberBegin()->name.GetString());
 					root->AddChild(node);
 				}
 			}
 		}
 		else if (iter->GetString())
 		{
-			generic_heirarchy* node = new generic_heirarchy(iter->GetString());
+			generic_hierarchy* node = new generic_hierarchy(iter->GetString());
 			root->AddChild(node);
 		}
 		else
 		{
-			generic_heirarchy* node = new generic_heirarchy("???");
+			generic_hierarchy* node = new generic_hierarchy("???");
 			root->AddChild(node);
 		}
 	}
 }
 
-void handle_json::consume_children_into_object(rapidjson::Value& object, const generic_heirarchy& parent, rapidjson::Document& doc)
+void handle_json::consume_children_into_object(rapidjson::Value& object, const generic_hierarchy& parent, rapidjson::Document& doc)
 {
-	parent.foreach_child([&object, &doc, this](const generic_heirarchy& member_value_pair) {
+	parent.foreach_child([&object, &doc, this](const generic_hierarchy& member_value_pair) {
 		assert(member_value_pair.has_name() || member_value_pair.has_children());
 		const char* name = member_value_pair.get_name();
 		rapidjson::Value value = consume_children_into_attribute_value(member_value_pair, doc);
@@ -185,18 +183,18 @@ void handle_json::consume_children_into_object(rapidjson::Value& object, const g
 	});
 }
 
-void handle_json::consume_children_into_array(rapidjson::Value& array, const generic_heirarchy& parent, rapidjson::Document& doc)
+void handle_json::consume_children_into_array(rapidjson::Value& array, const generic_hierarchy& parent, rapidjson::Document& doc)
 {
-	parent.foreach_child([&array, &doc, this](const generic_heirarchy& child) {
+	parent.foreach_child([&array, &doc, this](const generic_hierarchy& child) {
 		rapidjson::Value value = consume_into_attribute_value(child, doc);
 		array.PushBack(value, doc.GetAllocator());
 	});
 }
 
-bool handle_json::are_any_children_parents(const generic_heirarchy& parent)
+bool handle_json::are_any_children_parents(const generic_hierarchy& parent)
 {
 	bool ret_val = false;
-	parent.foreach_child([&ret_val](const generic_heirarchy& child) {
+	parent.foreach_child([&ret_val](const generic_hierarchy& child) {
 		if (!ret_val)
 		{
 			ret_val = child.has_children();
@@ -206,10 +204,10 @@ bool handle_json::are_any_children_parents(const generic_heirarchy& parent)
 	return ret_val;
 }
 
-bool handle_json::are_all_children_named(const generic_heirarchy& parent)
+bool handle_json::are_all_children_named(const generic_hierarchy& parent)
 {
 	bool ret_val = true;
-	parent.foreach_child([&ret_val](const generic_heirarchy& child) {
+	parent.foreach_child([&ret_val](const generic_hierarchy& child) {
 		if (ret_val)
 		{
 			ret_val = child.has_name();
@@ -219,10 +217,10 @@ bool handle_json::are_all_children_named(const generic_heirarchy& parent)
 	return ret_val;
 }
 
-bool handle_json::are_no_children_named(const generic_heirarchy& parent)
+bool handle_json::are_no_children_named(const generic_hierarchy& parent)
 {
 	bool ret_val = true;
-	parent.foreach_child([&ret_val](const generic_heirarchy& child) {
+	parent.foreach_child([&ret_val](const generic_hierarchy& child) {
 		if (ret_val)
 		{
 			ret_val = !child.has_name();
@@ -232,7 +230,7 @@ bool handle_json::are_no_children_named(const generic_heirarchy& parent)
 	return ret_val;
 }
 
-rapidjson::Value handle_json::consume_children_into_attribute_value(const generic_heirarchy& parent, rapidjson::Document& doc)
+rapidjson::Value handle_json::consume_children_into_attribute_value(const generic_hierarchy& parent, rapidjson::Document& doc)
 {
 	rapidjson::Value value;
 	if (!parent.has_children())
@@ -274,7 +272,7 @@ rapidjson::Value handle_json::consume_children_into_attribute_value(const generi
 	return value;
 }
 
-rapidjson::Value handle_json::consume_into_attribute_value(const generic_heirarchy& node, rapidjson::Document& doc)
+rapidjson::Value handle_json::consume_into_attribute_value(const generic_hierarchy& node, rapidjson::Document& doc)
 {
 	rapidjson::Value value;
 	if (!node.has_children())

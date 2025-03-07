@@ -1,15 +1,15 @@
 #pragma once
 
-#include "generic_heriarchy.h"
+#include "generic_hierarchy.h"
 
-class handle_text : IConsumeHeirarchy
+class handle_text : IConsumeHierarchy
 {
 public:
-	std::string consume_heirarchy(const generic_heirarchy& heirarchy) override
+	std::string consume_hierarchy(const generic_hierarchy& hierarchy) override
 	{
-		return consume_heirarchy_internal(0, heirarchy);
+		return consume_hierarchy_internal(0, hierarchy);
 	}
 
 private:
-	std::string consume_heirarchy_internal(int indent, const generic_heirarchy& node);
+	std::string consume_hierarchy_internal(int indent, const generic_hierarchy& node);
 };

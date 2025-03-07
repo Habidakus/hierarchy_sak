@@ -6,30 +6,22 @@
 #include <functional>
 #include <memory>
 
-class generic_heirarchy
+class generic_hierarchy
 {
 private:
 	std::optional<std::string> m_value;
-	std::vector<std::shared_ptr<generic_heirarchy>> m_children;
+	std::vector<std::shared_ptr<generic_hierarchy>> m_children;
 
 public:
-	generic_heirarchy(std::string_view str) : m_value(str) {}
-	generic_heirarchy(const char* value) : m_value(value) {}
-	generic_heirarchy() {}
+	generic_hierarchy(std::string_view str) : m_value(str) {}
+	generic_hierarchy(const char* value) : m_value(value) {}
+	generic_hierarchy() {}
 
-	void AddChild(generic_heirarchy* node);
-	void foreach_child(std::function<void(const generic_heirarchy&)> func) const;
+	void AddChild(generic_hierarchy* node);
+	void foreach_child(std::function<void(const generic_hierarchy&)> func) const;
 	inline bool has_children() const { return !m_children.empty(); }
 	inline bool has_single_child() const { return m_children.size() == 1; }
-	const generic_heirarchy& get_only_child() const;
-
-	//~generic_heirarchy() {
-	//	for (auto& child : m_children)
-	//	{
-	//		delete& child;
-	//	}
-	//	m_children.clear();
-	//}
+	const generic_hierarchy& get_only_child() const;
 
 	//bool is_unnamed_array() const {
 	//	if (!m_value.has_value())
@@ -77,9 +69,6 @@ public:
 	//	return m_children[0].m_value.value();
 	//}
 
-	//generic_heirarchy(const generic_heirarchy& other) : m_value(other.m_value) {}
-	//generic_heirarchy(const generic_heirarchy&& other) : m_value(std::move(other.m_value)) {}
-
 	inline bool has_name() const
 	{
 		return m_value.has_value();
@@ -91,14 +80,14 @@ public:
 	}
 };
 
-class IConsumeHeirarchy
+class IConsumeHierarchy
 {
 public:
-	virtual std::string consume_heirarchy(const generic_heirarchy& heirarchy) = 0;
+	virtual std::string consume_hierarchy(const generic_hierarchy& hierarchy) = 0;
 };
 
-class IProduceHeirarchy
+class IProduceHierarchy
 {
 public:
-	virtual generic_heirarchy* produce_heirarchy(std::string_view json_text) = 0;
+	virtual generic_hierarchy* parse_hierarchy(std::string_view json_text) = 0;
 };
